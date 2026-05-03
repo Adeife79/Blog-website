@@ -1,0 +1,21 @@
+services:
+  backend:
+    image: adeife08/backend-server:v2
+    container_name: backend-server
+    ports:
+      - "8092:8092"
+    environment:
+      - PORT=8092
+
+  client:
+    image: adeife08/client-server:v2
+    container_name: client-server
+    depends_on: 
+      - backend
+    ports:
+      - "8091:8091"
+    environment:
+#      - APP_API_URL=http://:8092
+      - PORT=8091
+
+  
