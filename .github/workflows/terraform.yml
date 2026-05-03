@@ -10,7 +10,7 @@ jobs:
     terraform:
         runs-on: ubuntu-latest
 
-         permissions:
+        permissions:
             id-token: write   # REQUIRED for OIDC
             contents: read
 
