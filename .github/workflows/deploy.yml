@@ -2,7 +2,7 @@ name: Deploy Application
 
 on:
   workflow_run:
-    workflows: ["Terraform Infrastructure"]
+    workflows: ["Terraform"]
     types:
       - completed
 
@@ -42,14 +42,14 @@ jobs:
 
       - name: Build and Push Client Image
         run: |
-            cd Blog-website
-            docker build -t adeife08/client-server:v2 ./client
+            cd client
+            docker build -t adeife08/client-server:v2 
             docker push adeife08/client-server:v2
 
       - name: Build and Push Backend Image
         run: |
-            cd Blog-website
-            docker build -t adeife08/backend-server:v2 ./backend
+            cd backend
+            docker build -t adeife08/backend-server:v2 
             docker push adeife08/backend-server:v2
 
       - name: Set up SSH Key
