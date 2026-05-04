@@ -85,7 +85,6 @@ jobs:
             docker --version
             docker-compose --version
             git clone https://github.com/Adeife79/Blog-website.git || true
-            git pull origin master || true
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker-compose pull || true
             docker-compose down || true
