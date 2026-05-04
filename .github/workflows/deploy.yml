@@ -83,9 +83,10 @@ jobs:
             sudo chmod +x /usr/local/bin/docker-compose
             docker --version
             docker-compose --version
-            sudo docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKERHUB_PASSWORD}}
-            docker compose pull || true
-            docker compose down || true
-            docker compose up -d || true
+            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+#            sudo docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKERHUB_PASSWORD}}
+            docker-compose pull || true
+            docker-compose down || true
+            docker-compose up -d || true
             
             
