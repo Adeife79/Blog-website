@@ -67,7 +67,7 @@ jobs:
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.EC2_IP }}
+          host: 98.92.183.183
           username: ec2-user
           key: ${{secrets.DEMO_SSH_KEY}}
           script: |
@@ -83,4 +83,3 @@ jobs:
             docker compose up -d
             
             
-# 98.92.183.183
