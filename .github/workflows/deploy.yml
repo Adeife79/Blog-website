@@ -74,7 +74,7 @@ jobs:
             echo "You've successfully connected to the instance"
             sudo yum update -y || true
             sudo amazon-linux-extras enable docker
-            sudo apt-get install -y docker docker-compose || true
+            sudo yum install -y docker docker-compose || true
             sudo systemctl start docker 
             sudo systemctl enable docker
             sudo usermod -aG docker ec2-user || true
