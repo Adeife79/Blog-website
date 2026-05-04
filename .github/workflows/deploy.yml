@@ -72,16 +72,15 @@ jobs:
           key: ${{secrets.DEMO_SSH_KEY}}
           script: |
             echo "You've successfully connected to the instance"
-            uname -a
-            cat /etc/os-release || true
-            sudo apt-get update -y || true
-            sudo apt-get install -y docker.io docker-compose || true
-            sudo systemctl start docker
+            sudo yum update -y || true
+            sudo amazon-linux-extras enable docker
+            sudo apt-get install -y docker docker-compose || true
+            sudo systemctl start docker 
             sudo systemctl enable docker
             sudo usermod -aG docker ec2-user || true
             sudo docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKERHUB_PASSWORD}}
-            docker compose pull
-            docker compose down
-            docker compose up -d
+            docker compose pull || true
+            docker compose down || true
+            docker compose up -d || true
             
             
