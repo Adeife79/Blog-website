@@ -72,11 +72,11 @@ jobs:
           key: ${{secrets.DEMO_SSH_KEY}}
           script: |
             echo "You've successfully connected to the instance"
-            sudo dnf update -y || true
-            sudo dnf install -y docker || true
+            sudo apt-get update -y || true
+            sudo apt-get install -y docker.io docker-compose || true
             sudo systemctl start docker
             sudo systemctl enable docker
-            sudo usermod -aG docker ec2-user
+            sudo usermod -aG docker ec2-user || true
             sudo docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKERHUB_PASSWORD}}
             docker compose pull
             docker compose down
