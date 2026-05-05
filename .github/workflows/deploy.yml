@@ -68,7 +68,7 @@ jobs:
         run: |
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
             docker-compose.yml \
-            ec2-user@98.92.183.183:/home/ec2-user
+            ec2-user@98.92.183.183:/home/ec2-user \
 #          echo "${{secrets.DEMO_SSH_KEY}}" > key.pem
  #         chmod 
 
