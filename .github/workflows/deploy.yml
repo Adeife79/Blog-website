@@ -100,8 +100,8 @@ jobs:
             docker --version
             docker-compose --version
 #            git clone https://github.com/Adeife79/Blog-website.git /home/ec2-user/Blog-website
-            cd /home/ec2-user/Blog-website
-            git pull
+            cd /home/ec2-user/Blog-website && git pull
+            
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             sudo docker compose down || true
             sudo docker compose pull
