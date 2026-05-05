@@ -63,16 +63,16 @@ jobs:
             mkdir -p ~/.ssh
             echo "${{secrets.DEMO_SSH_KEY}}" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
-            ssh-keyscan -H 98.92.183.183 >> ~/.ssh/known_hosts
+#            ssh-keyscan -H 98.92.183.183 >> ~/.ssh/known_hosts
 
-      - name: Copy docker-compose.yml to EC2
-        uses: appleboy/scp-action@v0.1.7
-         with:
-           host: 98.92.183.183
-           username: ec2-user
-           key: ${{secrets.DEMO_SSH_KEY}}
-           source: "docker-compose.yml"
-           target: "~/"
+#      - name: Copy docker-compose.yml to EC2
+#        uses: appleboy/scp-action@v0.1.7
+ #        with:
+ #          host: 98.92.183.183
+  #         username: ec2-user
+  #         key: ${{secrets.DEMO_SSH_KEY}}
+   #        source: "docker-compose.yml"
+    #       target: "~/"
 #        run: |
 #          scp -i ~/.ssh/id_rsa \
 #            docker-compose.yml \
@@ -89,6 +89,7 @@ jobs:
           script: |
             echo "You've successfully connected to the instance"
             sudo yum update -y || true
+            sudo yum install git -y || true
             sudo amazon-linux-extras enable docker
             sudo yum install -y docker || true
             sudo systemctl start docker 
@@ -98,10 +99,12 @@ jobs:
             sudo chmod +x /usr/local/bin/docker-compose
             docker --version
             docker-compose --version
+            git clone https://github.com/Adeife79/Blog-website.git /home/ec2-user/Blog-website
+            cd /home/ec2-user/Blog-website
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-            sudo docker-compose down || true
             sudo docker-compose pull
+            sudo docker-compose down || true
             sudo docker-compose up -d 
             
             
