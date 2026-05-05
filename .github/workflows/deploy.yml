@@ -66,10 +66,17 @@ jobs:
             ssh-keyscan -H 98.92.183.183 >> ~/.ssh/known_hosts
 
       - name: Copy docker-compose.yml to EC2
-        run: |
-          scp -i ~/.ssh/id_rsa \
-            docker-compose.yml \
-            ec2-user@98.92.183.183:/home/ec2-user/docker-compose.yml
+        uses: appleboy/scp-action@v0.1.7
+         with:
+           host: 98.92.183.183
+           username: ec2-user
+           key: ${{secrets.DEMO_SSH_KEY}}
+           source: "docker-compose.yml"
+           target: "~/"
+#        run: |
+#          scp -i ~/.ssh/id_rsa \
+#            docker-compose.yml \
+#            ec2-user@98.92.183.183:/home/ec2-user/docker-compose.yml
 #          echo "${{secrets.DEMO_SSH_KEY}}" > key.pem
  #         chmod 
 
@@ -88,15 +95,14 @@ jobs:
             sudo systemctl start docker 
             sudo systemctl enable docker
             sudo usermod -aG docker ec2-user || true
-            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
-              -o /usr/local/bin/docker-compose
+            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
             sudo chmod +x /usr/local/bin/docker-compose
             docker --version
             docker-compose --version
 #            cd /home/ec2-user
 #            git clone https://github.com/Adeife79/Blog-website.git || true
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            cd /home/ec2-user
+#            cd /home/ec2-user
             sudo docker-compose down || true
             sudo docker-compose pull
             sudo docker-compose up -d 
