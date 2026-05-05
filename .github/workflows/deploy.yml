@@ -63,12 +63,13 @@ jobs:
             mkdir -p ~/.ssh
             echo "${{secrets.DEMO_SSH_KEY}}" > ~/.ssh/id_rsa
             chmod 600 ~/.ssh/id_rsa
+            ssh-keyscan -H 98.92.183.183 >> ~/.ssh/known_hosts
 
       - name: Copy docker-compose.yml to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa \
+          scp -i ~/.ssh/id_rsa \
             docker-compose.yml \
-            ec2-user@98.92.183.183:/home/ec2-user \
+            ec2-user@98.92.183.183:/home/ec2-user/docker-compose.yml
 #          echo "${{secrets.DEMO_SSH_KEY}}" > key.pem
  #         chmod 
 
@@ -92,11 +93,12 @@ jobs:
             sudo chmod +x /usr/local/bin/docker-compose
             docker --version
             docker-compose --version
-            cd /home/ec2-user
+#            cd /home/ec2-user
 #            git clone https://github.com/Adeife79/Blog-website.git || true
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            docker-compose down || true
-            docker-compose pull
-            docker-compose up -d 
+            cd /home/ec2-user
+            sudo docker-compose down || true
+            sudo docker-compose pull
+            sudo docker-compose up -d 
             
             
