@@ -35,10 +35,10 @@ jobs:
       - name: Get EC2 IP from Terraform state
         id: get_ip
         run: |
-            cd aws-infra
-            terraform init -input=false -no-color
-            EC2_IP=$(terraform output -raw ec2_public_ip 2>/dev/null | head -n 1 | tr -d '\r')
-            echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
+          cd aws-infra
+          terraform init -input=false -no-color
+          EC2_IP=$(terraform output -raw ec2_public_ip 2>/dev/null | head -n 1 | tr -d '\r')
+          echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -48,21 +48,21 @@ jobs:
 
       - name: Build and Push Client Image
         run: |
-            cd client
-            docker build -t adeife08/client-server:v2 .
-            docker push adeife08/client-server:v2
+          cd client
+          docker build -t adeife08/client-server:v2 .
+          docker push adeife08/client-server:v2
 
       - name: Build and Push Backend Image
         run: |
-            cd backend
-            docker build -t adeife08/backend-server:v2 .
-            docker push adeife08/backend-server:v2
+          cd backend
+          docker build -t adeife08/backend-server:v2 .
+          docker push adeife08/backend-server:v2
 
       - name: Set up SSH Key
         run: |
-            mkdir -p ~/.ssh
-            echo "${{secrets.DEMO_SSH_KEY}}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
+          mkdir -p ~/.ssh
+          echo "${{secrets.DEMO_SSH_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 #            ssh-keyscan -H 98.92.183.183 >> ~/.ssh/known_hosts
 
 #      - name: Copy docker-compose.yml to EC2
@@ -87,24 +87,24 @@ jobs:
           username: ec2-user
           key: ${{secrets.DEMO_SSH_KEY}}
           script: |
-                echo "You've successfully connected to the instance"
-                sudo yum update -y || true
-                sudo yum install git -y || true
-                sudo amazon-linux-extras enable docker
-                sudo yum install -y docker || true
-                sudo systemctl start docker 
-                sudo systemctl enable docker
-                sudo usermod -aG docker ec2-user || true
-                sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-                sudo chmod +x /usr/local/bin/docker-compose
-                docker --version
-                docker-compose --version
+            echo "You've successfully connected to the instance"
+            sudo yum update -y || true
+            sudo yum install git -y || true
+            sudo amazon-linux-extras enable docker
+            sudo yum install -y docker || true
+            sudo systemctl start docker 
+            sudo systemctl enable docker
+            sudo usermod -aG docker ec2-user || true
+            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            docker --version
+            docker-compose --version
     #            git clone https://github.com/Adeife79/Blog-website.git /home/ec2-user/Blog-website
-                cd /home/ec2-user/Blog-website && git pull
+            cd /home/ec2-user/Blog-website && git pull
 
-                echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-                sudo docker compose down || true
-                sudo docker compose pull
-                sudo docker compose up -d 
+            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+            sudo docker compose down || true
+            sudo docker compose pull
+            sudo docker compose up -d 
             
             
