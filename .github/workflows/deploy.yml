@@ -95,7 +95,7 @@ jobs:
             if [ ! -d "Blog-website" ]; then
               git clone https://github.com/Adeife79/Blog-website.git
             fi
-            
+
             cd Blog-website
             git pull origin master
              
