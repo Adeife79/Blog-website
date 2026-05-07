@@ -26,7 +26,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-region: ${{env.AWS_REGION}}
+          aws-region: ${{ env.AWS_REGION }}
           role-to-assume: arn:aws:iam::749929394992:role/gh-actions-role
 
       - name: Setup Terraform
@@ -43,8 +43,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_PASSWORD}}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build and Push Client Image
         run: |
@@ -61,47 +61,38 @@ jobs:
       - name: Set up SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "${{secrets.DEMO_SSH_KEY}}" > ~/.ssh/id_rsa
+          echo "${{ secrets.DEMO_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-#            ssh-keyscan -H 98.92.183.183 >> ~/.ssh/known_hosts
-
-#      - name: Copy docker-compose.yml to EC2
-#        uses: appleboy/scp-action@v0.1.7
- #        with:
- #          host: 98.92.183.183
-  #         username: ec2-user
-  #         key: ${{secrets.DEMO_SSH_KEY}}
-   #        source: "docker-compose.yml"
-    #       target: "~/"
-#        run: |
-#          scp -i ~/.ssh/id_rsa \
-#            docker-compose.yml \
-#            ec2-user@98.92.183.183:/home/ec2-user/docker-compose.yml
-#          echo "${{secrets.DEMO_SSH_KEY}}" > key.pem
- #         chmod 
 
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: 98.92.183.183
           username: ec2-user
-          key: ${{secrets.DEMO_SSH_KEY}}
+          key: ${{ secrets.DEMO_SSH_KEY }}
           script: |
             echo "You've successfully connected to the instance"
+
             sudo yum update -y || true
-            sudo yum install git -y || true
+            sudo yum install -y git || true
+
             sudo amazon-linux-extras enable docker
             sudo yum install -y docker || true
+
             sudo systemctl start docker 
             sudo systemctl enable docker
+
             sudo usermod -aG docker ec2-user || true
+
             sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
             sudo chmod +x /usr/local/bin/docker-compose
+
             docker --version
             docker-compose --version
-    #            git clone https://github.com/Adeife79/Blog-website.git /home/ec2-user/Blog-website
-            cd /home/ec2-user/Blog-website && git pull
-
+            
+            cd /home/ec2-user/Blog-website
+            git pull 
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             sudo docker compose down || true
             sudo docker compose pull
