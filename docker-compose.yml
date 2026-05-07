@@ -2,6 +2,8 @@ services:
   backend:
     image: adeife08/backend-server:v2
     container_name: backend-server
+    env_file:
+      - .env
     ports:
       - "8092:8092"
     environment:
