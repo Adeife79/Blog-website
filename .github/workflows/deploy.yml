@@ -49,14 +49,14 @@ jobs:
       - name: Build and Push Client Image
         run: |
           cd client
-          docker build -t adeife08/client-server:v2 .
-          docker push adeife08/client-server:v2
+          docker build -t adeife08/client-server:v3 .
+          docker push adeife08/client-server:v3
 
       - name: Build and Push Backend Image
         run: |
           cd backend
-          docker build -t adeife08/backend-server:v2 .
-          docker push adeife08/backend-server:v2
+          docker build -t adeife08/backend-server:v3 .
+          docker push adeife08/backend-server:v3
 
       - name: Set up SSH Key
         run: |
