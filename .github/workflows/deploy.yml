@@ -98,6 +98,23 @@ jobs:
 
             cd Blog-website
             git pull origin master
+
+            cat > /home/ec2-user/Blog-website/.env << EOF
+            NODE_ENV=production
+            MONGO_URI_PRODUCTION=${{ secrets.MONGO_URI_PRODUCTION }}
+            GOOGLE_CLIENT_PRODUCTION=${{ secrets.GOOGLE_CLIENT_PRODUCTION }}
+            GOOGLE_SECRET_PRODUCTION=${{ secrets.GOOGLE_SECRET_PRODUCTION }}
+            COOKIE_KEY_PRODUCTION=${{ secrets.COOKIE_KEY_PRODUCTION }}
+            TOKEN_SECRET_PRODUCTION=${{ secrets.TOKEN_SECRET_PRODUCTION }}
+            CLOUD_NAME_PRODUCTION=${{ secrets.CLOUD_NAME_PRODUCTION }}
+            CLOUD_API_KEY_PRODUCTION=${{ secrets.CLOUD_API_KEY_PRODUCTION }}
+            CLOUD_API_SECRET_PRODUCTION=${{ secrets.CLOUD_API_SECRET_PRODUCTION }}
+            EMAIL_ID_PRODUCTION=${{ secrets.EMAIL_ID_PRODUCTION }}
+            PASS_PRODUCTION=${{ secrets.PASS_PRODUCTION }}
+            PORT_PRODUCTION=${{ secrets.PORT_PRODUCTION }}
+            REACT_APP_BACKEND_URL_PRODUCTION=http://32.196.240.213:5002
+            REACT_APP_FRONTEND_URL_PRODUCTION=http://32.196.240.213:5003
+            EOF
              
             echo "${{ secrets.DOCKERHUB_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             sudo docker-compose down || true
